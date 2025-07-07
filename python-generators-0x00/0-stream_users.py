@@ -18,7 +18,7 @@ def stream_users():
         )
 
         cursor = connection.cursor(dictionary=True)
-        cursor.execute("SELECT user_id, name, email, age FROM user_data")
+        cursor.execute("SELECT * FROM user_data")
 
         for row in cursor:
             yield row

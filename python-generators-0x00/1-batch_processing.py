@@ -26,8 +26,8 @@ def stream_users_in_batches(batch_size):
                 break
             yield batch
 
-    except Error as e:
-        print(f"[ERROR] {e}")
+    except Error as err:
+        print(f"[ERROR] {err}")
 
     finally:
         if 'cursor' in locals():

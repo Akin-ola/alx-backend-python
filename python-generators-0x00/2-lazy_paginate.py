@@ -1,4 +1,3 @@
-import mysql.connector
 from seed import connect_to_prodev
 
 def paginate_users(page_size, offset):

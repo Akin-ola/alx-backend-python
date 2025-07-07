@@ -85,7 +85,7 @@ connection = connect_db()
 if connection:
     cursor = connection.cursor()
     connect_to_prodev(cursor)
-    #create_table(cursor)
+    create_table(cursor)
     insert_data(cursor)
     connection.commit()
     cursor.close()
