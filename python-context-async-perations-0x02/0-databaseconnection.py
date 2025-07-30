@@ -11,6 +11,9 @@ config = {
     'password': os.getenv('DB_PASSWORD'),
 }
 class DatabaseConnection:
+    def __init__(self):
+        pass
+    
     def __enter__(self):
         self.conn = mysql.connector.connect(**config)
         self.cursor = self.conn.cursor()
