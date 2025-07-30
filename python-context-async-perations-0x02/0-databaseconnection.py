@@ -13,7 +13,7 @@ config = {
 class DatabaseConnection:
     def __init__(self):
         pass
-    
+
     def __enter__(self):
         self.conn = mysql.connector.connect(**config)
         self.cursor = self.conn.cursor()
@@ -28,6 +28,6 @@ class DatabaseConnection:
 
 
 with DatabaseConnection() as cursor:
-    cursor.execute("SELECT * FROM user_data")
+    cursor.execute("SELECT * FROM users")
     result = cursor.fetchall()
     print(result)
