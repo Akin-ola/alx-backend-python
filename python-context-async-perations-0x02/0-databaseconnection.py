@@ -10,7 +10,7 @@ config = {
     'database': os.getenv('DB_NAME'),
     'password': os.getenv('DB_PASSWORD'),
 }
-class Database_connection:
+class DatabaseConnection:
     def __enter__(self):
         self.conn = mysql.connector.connect(**config)
         self.cursor = self.conn.cursor()
@@ -24,7 +24,7 @@ class Database_connection:
         print("Connection Closed...")
 
 
-with Database_connection() as cursor:
+with DatabaseConnection() as cursor:
     cursor.execute("SELECT * FROM user_data")
     result = cursor.fetchall()
     print(result)
