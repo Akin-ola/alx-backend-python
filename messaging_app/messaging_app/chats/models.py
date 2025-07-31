@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 import uuid
 from django.contrib.auth.hashers import make_password
@@ -43,7 +44,7 @@ sent_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)"""
 
 class Message(models.Model):
     message_id= models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    sender_id= models.ForeignKey(User, on_delete=models.CASCADE, related_name='message')
+    sender_id= models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
     recipient_id= models.ForeignKey(User, on_delete=models.CASCADE)
     message_body= models.TextField(null=False)
     sent_at= models.DateTimeField(auto_now_add=True)
@@ -80,7 +81,7 @@ class Property(models.Model):
     name= models.CharField(max_length=255, null=False)
     description= models.TextField(null=False)
     location= models.CharField(max_length=255, null=False)
-    pricepernight= models.DecimalField(max_digits=10, null=False)
+    pricepernight= models.DecimalField(max_digits=10, decimal_places=2, null=False)
     created_at= models.DateTimeField(auto_now_add=True)
     updated_at= models.DateTimeField(auto_now_add=True)
 
@@ -108,7 +109,7 @@ class Booking(models.Model):
     user_id= models.ForeignKey(User, on_delete= models.CASCADE, related_name='booking')
     start_date= models.DateField(null=False)
     end_date= models.DateField(null=False)
-    total_price= models.DecimalField(max_digits=10, null=False)
+    total_price= models.DecimalField(max_digits=10, decimal_places=2, null=False)
     status= models.CharField(max_length=55, choices=status_choices, null=False, blank=False)
     created_at= models.DateTimeField(auto_now_add=True)
 
@@ -130,7 +131,7 @@ payment_methods={
 class Payment(models.Model):
     payment_id= models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     booking_id= models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='payment', db_index=True)
-    amount= models.DecimalField(max_digits=10, null=False)
+    amount= models.DecimalField(max_digits=10, decimal_places=2, null=False)
     payment_date= models.DateTimeField(auto_now_add=True)
     payment_method= models.CharField(max_length=55, choices=payment_methods, null=False, blank=False)
 
@@ -152,8 +153,8 @@ class Review(models.Model):
     rating= models.IntegerField(
         null=False,
         validators=[
-            models.validators.MinValueValidator(1),
-            models.validators.MaxValueValidator(5)
+            MinValueValidator(1),
+            MaxValueValidator(5)
         ]
     )
     comment= models.TextField(null=False)
