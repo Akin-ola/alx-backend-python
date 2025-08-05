@@ -36,6 +36,18 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.last_name}"
     
+    
+"""conversation_id (Primary Key, UUID, Indexed)
+participants_id (Foreign Key, references User(user_id)
+created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)"""
+
+class Conversation(models.Model):
+    conversation_id= models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    participants_id= models.ManyToManyField(User, related_name='conversations')
+    created_at= models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.conversation_id}"
 
 """message_id (Primary Key, UUID, Indexed)
 sender_id (Foreign Key, references User(user_id))
@@ -44,26 +56,13 @@ sent_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)"""
 
 class Message(models.Model):
     message_id= models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    sender_id= models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
-    recipient_id= models.ForeignKey(User, on_delete=models.CASCADE)
+    sender_id= models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    conversation= models.ForeignKey(Conversation, default=uuid.uuid4, on_delete=models.CASCADE, related_name='messages')
     message_body= models.TextField(null=False)
     sent_at= models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.message_id} {self.sender_id}"
-    
-    
-"""conversation_id (Primary Key, UUID, Indexed)
-participants_id (Foreign Key, references User(user_id)
-created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)"""
-
-class Conversation(models.Model):
-    conversation_id= models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
-    participants_id= models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at= models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.conversation_id}"
+        return f"From {self.sender_id.username}"
     
 
 """property_id: Primary Key, UUID, Indexed
